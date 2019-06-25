@@ -8,7 +8,7 @@
 
 import UIKit
 import RealmSwift
-
+import ChameleonFramework
 
 class ItemsTableViewController: SwipeTableViewController {
 
@@ -25,8 +25,6 @@ class ItemsTableViewController: SwipeTableViewController {
         super.viewDidLoad()
         tableView.rowHeight = 80.0
         tableView.separatorStyle = .none
-
-        
     }
 
     // MARK: - Table view data source
@@ -41,7 +39,13 @@ class ItemsTableViewController: SwipeTableViewController {
         if let item = toDoItems?[indexPath.row]
         {
             cell.textLabel?.text = item.title
-            cell.backgroundColor = UIColor(hexString: item.color)
+            
+            if let color = UIColor(hexString: selectedCategory!.color)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(toDoItems!.count))
+            {
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
+          
             // Ternary operator ==> value = condition ? valueIfTrue : valueIfFalse
             cell.accessoryType = item.done ? .checkmark : .none
         }
@@ -49,7 +53,6 @@ class ItemsTableViewController: SwipeTableViewController {
         {
             cell.textLabel?.text = "No Items Added Yet"
         }
-        
         return cell
     }
     
@@ -83,7 +86,6 @@ class ItemsTableViewController: SwipeTableViewController {
                         let newItem = Item()
                         newItem.title = textField.text!
                         newItem.dateCreated = Date()
-                        newItem.color = UIColor.randomFlat.hexValue()
                         currentCategory.items.append(newItem)
                     }
                 }
