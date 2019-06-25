@@ -9,8 +9,9 @@
 import UIKit
 import RealmSwift
 
-class BucketListTableViewController: UITableViewController {
 
+class BucketListTableViewController: SwipeTableViewController {
+  
     let realm = try! Realm()
     
     var categories: Results<Category>?
@@ -18,6 +19,7 @@ class BucketListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCategories()
+        tableView.rowHeight = 80.0
 
     }
 
@@ -30,7 +32,7 @@ class BucketListTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
         return cell
         
@@ -71,6 +73,20 @@ class BucketListTableViewController: UITableViewController {
         categories = realm.objects(Category.self)
         tableView.reloadData()
         
+    }
+    
+    override func updateModel(at indexPath: IndexPath)
+    {
+        if let categoryForDeletion = self.categories?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(categoryForDeletion)
+                }
+            }
+            catch {
+                print("Error while deleting the model \(error)")
+            }
+        }
     }
     
     @IBAction func addCategoryClicked(_ sender: Any) {

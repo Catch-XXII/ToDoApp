@@ -9,7 +9,8 @@
 import UIKit
 import RealmSwift
 
-class ItemsTableViewController: UITableViewController {
+
+class ItemsTableViewController: SwipeTableViewController {
 
     var toDoItems: Results<Item>?
     let realm = try! Realm()
@@ -22,7 +23,8 @@ class ItemsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.rowHeight = 80.0
+        
     }
 
     // MARK: - Table view data source
@@ -33,8 +35,7 @@ class ItemsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToItemsCell", for: indexPath)
-        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)        
         if let item = toDoItems?[indexPath.row]
         {
             cell.textLabel?.text = item.title
@@ -103,6 +104,21 @@ class ItemsTableViewController: UITableViewController {
         toDoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
     }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = toDoItems?[indexPath.row]
+        {
+            do {
+                try realm.write {
+                    realm.delete(item)
+                }
+            }
+            catch {
+                print("Error while deleting object from realm in items table")
+            }
+            
+        }
+    }
 
 } // End of Class
 
@@ -127,3 +143,4 @@ extension ItemsTableViewController: UISearchBarDelegate {
         }
     }
 } // End of extension
+
