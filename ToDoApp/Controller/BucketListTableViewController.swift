@@ -8,7 +8,7 @@
 
 import UIKit
 import RealmSwift
-
+import ChameleonFramework
 
 class BucketListTableViewController: SwipeTableViewController {
   
@@ -20,6 +20,7 @@ class BucketListTableViewController: SwipeTableViewController {
         super.viewDidLoad()
         loadCategories()
         tableView.rowHeight = 80.0
+        tableView.separatorStyle = .none
 
     }
 
@@ -33,7 +34,11 @@ class BucketListTableViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories Added Yet"
+        if let category = categories?[indexPath.row] {
+            cell.textLabel?.text = category.name 
+            cell.backgroundColor = UIColor(hexString: category.color )
+            
+        }
         return cell
         
     }
@@ -97,6 +102,7 @@ class BucketListTableViewController: SwipeTableViewController {
     
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.color = UIColor.randomFlat.hexValue()
             self.save(category: newCategory)
         }
         alert.addAction(action)

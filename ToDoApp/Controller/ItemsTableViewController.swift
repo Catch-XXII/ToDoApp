@@ -24,6 +24,8 @@ class ItemsTableViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = 80.0
+        tableView.separatorStyle = .none
+
         
     }
 
@@ -39,6 +41,7 @@ class ItemsTableViewController: SwipeTableViewController {
         if let item = toDoItems?[indexPath.row]
         {
             cell.textLabel?.text = item.title
+            cell.backgroundColor = UIColor(hexString: item.color)
             // Ternary operator ==> value = condition ? valueIfTrue : valueIfFalse
             cell.accessoryType = item.done ? .checkmark : .none
         }
@@ -80,6 +83,7 @@ class ItemsTableViewController: SwipeTableViewController {
                         let newItem = Item()
                         newItem.title = textField.text!
                         newItem.dateCreated = Date()
+                        newItem.color = UIColor.randomFlat.hexValue()
                         currentCategory.items.append(newItem)
                     }
                 }
