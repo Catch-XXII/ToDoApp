@@ -14,7 +14,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     override func viewDidLoad()
     {
         super.viewDidLoad()
-
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]?
@@ -22,7 +21,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         guard orientation == .right else { return nil }
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") { action, indexPath in
             self.updateModel(at: indexPath)
-
         }
         
         // customize the action appearance
@@ -37,7 +35,6 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions
     {
         var options = SwipeOptions()
@@ -50,5 +47,5 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         print("cell deleted from super class")
     }
 
-}
+} // End of Class
 

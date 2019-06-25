@@ -16,15 +16,13 @@ class BucketListTableViewController: SwipeTableViewController {
     
     var categories: Results<Category>?
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
         loadCategories()
         tableView.rowHeight = 80.0
         tableView.separatorStyle = .none
-
     }
-
-    // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
@@ -34,10 +32,14 @@ class BucketListTableViewController: SwipeTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
-        if let category = categories?[indexPath.row] {
-            cell.textLabel?.text = category.name 
-            cell.backgroundColor = UIColor(hexString: category.color )
+        
+        if let category = categories?[indexPath.row]
+        {
+            cell.textLabel?.text = category.name
             
+            guard let categoryColor = UIColor(hexString: category.color) else {fatalError()}
+            cell.backgroundColor = categoryColor
+            cell.textLabel?.textColor = ContrastColorOf(categoryColor, returnFlat: true)
         }
         return cell
         
@@ -77,7 +79,6 @@ class BucketListTableViewController: SwipeTableViewController {
     {
         categories = realm.objects(Category.self)
         tableView.reloadData()
-        
     }
     
     override func updateModel(at indexPath: IndexPath)
@@ -94,8 +95,8 @@ class BucketListTableViewController: SwipeTableViewController {
         }
     }
     
-    @IBAction func addCategoryClicked(_ sender: Any) {
-        
+    @IBAction func addCategoryClicked(_ sender: Any)
+    {
         var textField = UITextField()
         let alert = UIAlertController(title: "Add New Category", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
