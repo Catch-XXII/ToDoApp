@@ -106,6 +106,10 @@ class BucketListTableViewController: SwipeTableViewController {
             newCategory.color = UIColor.randomFlat.hexValue()
             self.save(category: newCategory)
         }
+        let cancel = UIAlertAction(title: "Cancel", style: .destructive) { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }
+        alert.addAction(cancel)
         alert.addAction(action)
         alert.addTextField { (field) in
             textField = field

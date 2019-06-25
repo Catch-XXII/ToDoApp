@@ -30,6 +30,7 @@ class ItemsTableViewController: SwipeTableViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        self.hideKeyboard()
         tableView.rowHeight = 80.0
         tableView.separatorStyle = .none
     }
@@ -131,10 +132,14 @@ class ItemsTableViewController: SwipeTableViewController {
             }
             self.tableView.reloadData()
         }
+        let cancel = UIAlertAction(title: "Cancel", style: .destructive) { (action) in
+            alert.dismiss(animated: true, completion: nil)
+        }
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new item"
             textField = alertTextField
         }
+        alert.addAction(cancel)
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
@@ -167,27 +172,34 @@ class ItemsTableViewController: SwipeTableViewController {
 
 //MARK: - Search bar methods
 
-extension ItemsTableViewController: UISearchBarDelegate {
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
+extension ItemsTableViewController: UISearchBarDelegate
+{
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar)
+    {
         toDoItems = toDoItems?.filter("title CONTAINS[cd] %@", searchBar.text!).sorted(byKeyPath: "dateCreated", ascending: true)
-        
         tableView.reloadData()
-        
     }
     
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text?.count == 0 {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        if searchBar.text?.count == 0
+        {
             loadItems()
-            
-            DispatchQueue.main.async {
+            DispatchQueue.main.async
+            {
                 searchBar.resignFirstResponder()
             }
-            
         }
     }
 }
 
-
+extension UIViewController {
+    func hideKeyboard() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    @objc func dismissKeyboard(){
+        view.endEditing(true)
+    }
+}
